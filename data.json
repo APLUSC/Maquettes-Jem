@@ -21,6 +21,19 @@
       ]
     },
     {
+  "id": "ma-maquette-1",
+  "nom": "Dashboard Manager v1",
+  "fichier": "maquettes/equipe/dashboard-v1.html",
+  "images": ["maquettes/equipe/screenshot1.png"],
+  "date": "2026-01-29",
+  "commentaires": [
+    {
+      "date": "2026-01-29",
+      "texte": "Première version du dashboard"
+    }
+  ]
+}
+    {
       "id": "expertises",
       "nom": "Expertises",
       "description": "Gestion des expertises et compétences",
