@@ -1,0 +1,397 @@
+/* Maquettes Jem - Styles Jemanage */
+
+:root {
+    --rouge-corail: #E72B58;
+    --bleu-marine: #0F3A4C;
+    --bleu: #2E86AB;
+    --turquoise: #4ECDC4;
+    --gris-clair: #F5F7FA;
+    --gris-texte: #64748B;
+    --blanc: #FFFFFF;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    background-color: var(--gris-clair);
+    color: var(--bleu-marine);
+    line-height: 1.6;
+}
+
+/* Header */
+header {
+    background-color: var(--bleu-marine);
+    color: var(--blanc);
+    padding: 2rem 0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+header h1 {
+    font-size: 2rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+header p {
+    color: var(--turquoise);
+    font-size: 1rem;
+}
+
+/* Navigation (breadcrumb) */
+.breadcrumb {
+    background-color: var(--blanc);
+    padding: 1rem 0;
+    border-bottom: 1px solid #E2E8F0;
+}
+
+.breadcrumb a {
+    color: var(--bleu);
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+
+.breadcrumb a:hover {
+    color: var(--rouge-corail);
+    text-decoration: underline;
+}
+
+.breadcrumb span {
+    color: var(--gris-texte);
+    margin: 0 0.5rem;
+}
+
+/* Main content */
+main {
+    padding: 3rem 0;
+}
+
+/* Grid de thèmes */
+.themes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.theme-card {
+    background-color: var(--blanc);
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+    cursor: pointer;
+    border: 2px solid transparent;
+}
+
+.theme-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
+    border-color: var(--turquoise);
+}
+
+.theme-card h3 {
+    color: var(--bleu-marine);
+    font-size: 1.3rem;
+    margin-bottom: 0.5rem;
+}
+
+.theme-card .count {
+    color: var(--gris-texte);
+    font-size: 0.9rem;
+}
+
+.theme-card .count strong {
+    color: var(--rouge-corail);
+    font-weight: 600;
+}
+
+/* Bouton ajouter thème */
+.add-theme-card {
+    background: linear-gradient(135deg, var(--turquoise) 0%, var(--bleu) 100%);
+    color: var(--blanc);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: 2px dashed var(--blanc);
+}
+
+.add-theme-card:hover {
+    background: linear-gradient(135deg, var(--bleu) 0%, var(--bleu-marine) 100%);
+    border-color: var(--turquoise);
+}
+
+.add-theme-card .icon {
+    font-size: 3rem;
+    margin-bottom: 0.5rem;
+}
+
+.add-theme-card h3 {
+    color: var(--blanc);
+}
+
+/* Liste des maquettes */
+.maquettes-list {
+    display: grid;
+    gap: 1.5rem;
+}
+
+.maquette-item {
+    background-color: var(--blanc);
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.maquette-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid var(--gris-clair);
+}
+
+.maquette-header h3 {
+    color: var(--bleu-marine);
+    font-size: 1.2rem;
+}
+
+.maquette-date {
+    color: var(--gris-texte);
+    font-size: 0.85rem;
+}
+
+.maquette-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.btn {
+    padding: 0.6rem 1.2rem;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.btn-primary {
+    background-color: var(--rouge-corail);
+    color: var(--blanc);
+}
+
+.btn-primary:hover {
+    background-color: #d62348;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(231, 43, 88, 0.3);
+}
+
+.btn-secondary {
+    background-color: var(--bleu);
+    color: var(--blanc);
+}
+
+.btn-secondary:hover {
+    background-color: #2574a1;
+}
+
+.btn-outline {
+    background-color: transparent;
+    border: 2px solid var(--turquoise);
+    color: var(--turquoise);
+}
+
+.btn-outline:hover {
+    background-color: var(--turquoise);
+    color: var(--blanc);
+}
+
+/* Images de maquettes */
+.maquette-images {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1rem;
+    margin: 1rem 0;
+}
+
+.maquette-images img {
+    width: 100%;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.maquette-images img:hover {
+    transform: scale(1.05);
+}
+
+/* Commentaires */
+.comments-section {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 2px solid var(--gris-clair);
+}
+
+.comments-section h4 {
+    color: var(--bleu-marine);
+    font-size: 1rem;
+    margin-bottom: 1rem;
+}
+
+.comment {
+    background-color: var(--gris-clair);
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 0.75rem;
+}
+
+.comment-date {
+    color: var(--gris-texte);
+    font-size: 0.8rem;
+    margin-bottom: 0.5rem;
+}
+
+.comment-text {
+    color: var(--bleu-marine);
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+/* Modal pour iframe */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(15, 58, 76, 0.9);
+    z-index: 1000;
+    padding: 2rem;
+}
+
+.modal.active {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content {
+    background-color: var(--blanc);
+    border-radius: 12px;
+    width: 95%;
+    height: 90%;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.modal-header {
+    padding: 1rem 1.5rem;
+    background-color: var(--bleu-marine);
+    color: var(--blanc);
+    border-radius: 12px 12px 0 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    color: var(--blanc);
+    font-size: 2rem;
+    cursor: pointer;
+    line-height: 1;
+    padding: 0;
+    width: 32px;
+    height: 32px;
+}
+
+.modal-close:hover {
+    color: var(--rouge-corail);
+}
+
+.modal-body {
+    flex: 1;
+    overflow: hidden;
+}
+
+.modal-body iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+/* Section "pas de maquettes" */
+.empty-state {
+    text-align: center;
+    padding: 4rem 2rem;
+    color: var(--gris-texte);
+}
+
+.empty-state .icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    opacity: 0.3;
+}
+
+/* Instructions */
+.instructions {
+    background-color: var(--blanc);
+    border-left: 4px solid var(--turquoise);
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin-top: 2rem;
+}
+
+.instructions h3 {
+    color: var(--bleu-marine);
+    margin-bottom: 1rem;
+}
+
+.instructions code {
+    background-color: var(--gris-clair);
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    font-family: 'Courier New', monospace;
+    color: var(--rouge-corail);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .themes-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .modal {
+        padding: 0;
+    }
+    
+    .modal-content {
+        width: 100%;
+        height: 100%;
+        border-radius: 0;
+    }
+    
+    .modal-header {
+        border-radius: 0;
+    }
+}
