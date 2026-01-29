@@ -1,0 +1,1304 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Jemanage — Équipe (maquette)</title>
+  <style>
+    :root{
+      --bg:#0b1220;
+      --panel:#0f1a2e;
+      --panel2:#101f37;
+      --text:#e7edf7;
+      --muted:#9fb0c7;
+      --line:rgba(255,255,255,.08);
+      --good:#2bd4a5;
+      --warn:#ffcc66;
+      --bad:#ff6b6b;
+      --info:#70a7ff;
+      --shadow: 0 10px 30px rgba(0,0,0,.35);
+      --r:16px;
+      --r2:12px;
+      --pad:16px;
+      --font: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:var(--font);
+      background: radial-gradient(1200px 800px at 20% -10%, rgba(112,167,255,.18), transparent 60%),
+                  radial-gradient(900px 700px at 100% 0%, rgba(43,212,165,.12), transparent 55%),
+                  var(--bg);
+      color:var(--text);
+    }
+    a{color:inherit; text-decoration:none}
+    .app{
+      display:grid;
+      grid-template-columns: 260px 1fr;
+      min-height:100vh;
+    }
+    .sidebar{
+      border-right:1px solid var(--line);
+      padding:18px 14px;
+      background:linear-gradient(180deg, rgba(255,255,255,.03), transparent 28%);
+    }
+    .brand{
+      display:flex; align-items:center; gap:10px;
+      padding:10px 12px; border-radius:12px;
+      background:rgba(255,255,255,.03);
+      border:1px solid var(--line);
+    }
+    .logo{
+      width:34px; height:34px; border-radius:10px;
+      background:linear-gradient(135deg, rgba(112,167,255,.9), rgba(43,212,165,.9));
+      box-shadow:0 8px 20px rgba(0,0,0,.25);
+    }
+    .brand b{font-size:14px}
+    .brand small{display:block; color:var(--muted); margin-top:2px}
+    .nav{
+      margin-top:16px;
+    }
+    .nav h4{
+      font-size:11px; letter-spacing:.08em; text-transform:uppercase;
+      color:rgba(231,237,247,.6);
+      margin:14px 10px 8px;
+    }
+    .nav a{
+      display:flex; align-items:center; justify-content:space-between;
+      padding:10px 12px;
+      border-radius:12px;
+      color:rgba(231,237,247,.9);
+      border:1px solid transparent;
+      margin:4px 4px;
+      transition:.15s ease;
+    }
+    .nav a:hover{
+      background:rgba(255,255,255,.03);
+      border-color:var(--line);
+    }
+    .nav a.active{
+      background:rgba(112,167,255,.12);
+      border-color:rgba(112,167,255,.25);
+    }
+    .chip{
+      font-size:12px;
+      padding:2px 8px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      color:rgba(231,237,247,.85);
+      background:rgba(255,255,255,.02);
+    }
+    .content{
+      padding:22px 22px 28px;
+    }
+    .topbar{
+      display:flex; align-items:flex-start; justify-content:space-between; gap:16px;
+      margin-bottom:14px;
+    }
+    .title h1{
+      font-size:20px; margin:0;
+    }
+    .title p{
+      margin:6px 0 0; color:var(--muted); font-size:13px; line-height:1.35;
+      max-width:70ch;
+    }
+    .actions{
+      display:flex; gap:10px; align-items:center; flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+    .btn{
+      cursor:pointer;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.03);
+      color:var(--text);
+      padding:10px 12px;
+      border-radius:12px;
+      font-size:13px;
+      display:inline-flex; align-items:center; gap:8px;
+      box-shadow:none;
+      transition:.15s ease;
+      user-select:none;
+    }
+    .btn:hover{transform:translateY(-1px); border-color:rgba(255,255,255,.18)}
+    .btn.primary{
+      background:rgba(43,212,165,.12);
+      border-color:rgba(43,212,165,.28);
+    }
+    .btn.danger{
+      background:rgba(255,107,107,.12);
+      border-color:rgba(255,107,107,.26);
+    }
+    .btn .dot{
+      width:8px; height:8px; border-radius:50%;
+      background:rgba(255,255,255,.3);
+    }
+    .grid{
+      display:grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap:14px;
+    }
+    @media (max-width: 1100px){
+      .app{grid-template-columns: 1fr}
+      .sidebar{display:none}
+      .grid{grid-template-columns:1fr}
+    }
+    .panel{
+      background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01));
+      border:1px solid var(--line);
+      border-radius:var(--r);
+      box-shadow:var(--shadow);
+    }
+    .panel .hd{
+      padding:14px 16px;
+      border-bottom:1px solid var(--line);
+      display:flex; align-items:center; justify-content:space-between; gap:12px;
+    }
+    .panel .hd b{font-size:13px}
+    .panel .hd small{color:var(--muted); font-size:12px}
+    .panel .bd{padding:14px 16px}
+    .kpis{
+      display:grid;
+      grid-template-columns: repeat(4, minmax(0,1fr));
+      gap:10px;
+    }
+    @media (max-width: 900px){
+      .kpis{grid-template-columns: repeat(2, minmax(0,1fr))}
+    }
+    .kpi{
+      padding:12px 12px;
+      border-radius:14px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.02);
+      cursor:pointer;
+      transition:.12s ease;
+    }
+    .kpi:hover{transform:translateY(-1px); border-color:rgba(255,255,255,.18)}
+    .kpi .label{font-size:12px; color:var(--muted)}
+    .kpi .value{font-size:20px; margin-top:6px}
+    .kpi .meta{margin-top:6px; font-size:12px; color:rgba(231,237,247,.75)}
+    .pill{
+      display:inline-flex; align-items:center; gap:8px;
+      padding:6px 10px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.02);
+      font-size:12px;
+      color:rgba(231,237,247,.85);
+      white-space:nowrap;
+    }
+    .pill .s{
+      width:8px; height:8px; border-radius:50%;
+      background:rgba(255,255,255,.22);
+    }
+    .s.good{background:var(--good)}
+    .s.warn{background:var(--warn)}
+    .s.bad{background:var(--bad)}
+    .s.info{background:var(--info)}
+    .todo{
+      display:flex; flex-direction:column; gap:10px;
+    }
+    .todo .item{
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.02);
+      border-radius:14px;
+      padding:12px 12px;
+      display:flex; align-items:flex-start; justify-content:space-between; gap:12px;
+      cursor:pointer;
+      transition:.12s ease;
+    }
+    .todo .item:hover{transform:translateY(-1px); border-color:rgba(255,255,255,.18)}
+    .todo .item b{font-size:13px}
+    .todo .item p{margin:6px 0 0; color:var(--muted); font-size:12px; line-height:1.35}
+    .todo .item .cta{
+      display:flex; align-items:center; gap:10px;
+      color:rgba(231,237,247,.85);
+      font-size:12px;
+      padding:8px 10px;
+      border-radius:12px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.02);
+      white-space:nowrap;
+    }
+    .filters{
+      display:flex; flex-wrap:wrap; gap:10px;
+      align-items:center;
+      justify-content:space-between;
+      padding:12px 16px;
+      border-top:1px solid var(--line);
+      background:rgba(0,0,0,.08);
+      border-radius:0 0 var(--r) var(--r);
+    }
+    .filters .left, .filters .right{display:flex; gap:10px; flex-wrap:wrap; align-items:center}
+    .input{
+      display:flex; align-items:center; gap:10px;
+      padding:10px 12px;
+      border-radius:12px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.02);
+      min-width:260px;
+    }
+    .input input{
+      background:transparent; border:none; outline:none; color:var(--text);
+      font-size:13px; width:100%;
+    }
+    select{
+      border-radius:12px;
+      padding:10px 12px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.02);
+      color:var(--text);
+      font-size:13px;
+      outline:none;
+    }
+    option{background:#0b1220}
+    .table{
+      width:100%;
+      border-collapse:separate;
+      border-spacing:0 10px;
+    }
+    .row{
+      background:rgba(255,255,255,.02);
+      border:1px solid var(--line);
+      border-radius:14px;
+    }
+    .tr{
+      display:grid;
+      grid-template-columns: 1.4fr 1fr .9fr 1.2fr .7fr;
+      gap:10px;
+      align-items:center;
+      padding:12px 12px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.02);
+      border-radius:14px;
+      cursor:pointer;
+      transition:.12s ease;
+    }
+    .tr:hover{transform:translateY(-1px); border-color:rgba(255,255,255,.18)}
+    @media (max-width: 900px){
+      .tr{grid-template-columns: 1.5fr 1fr .9fr; grid-auto-rows:auto; row-gap:8px}
+      .tr .hide-sm{display:none}
+    }
+    .cell small{display:block; color:var(--muted); font-size:12px}
+    .cell b{font-size:13px}
+    .avatar{
+      width:28px; height:28px; border-radius:10px;
+      display:inline-flex; align-items:center; justify-content:center;
+      background:rgba(112,167,255,.16);
+      border:1px solid rgba(112,167,255,.22);
+      font-weight:700; font-size:12px;
+      margin-right:10px;
+      flex:0 0 auto;
+    }
+    .name{
+      display:flex; align-items:center; gap:10px;
+    }
+    .status{
+      display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end;
+    }
+    .tabs{
+      display:flex; gap:8px; flex-wrap:wrap;
+      margin:14px 0 14px;
+    }
+    .tab{
+      padding:10px 12px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.02);
+      font-size:13px;
+      cursor:pointer;
+      transition:.12s ease;
+      user-select:none;
+      color:rgba(231,237,247,.9);
+    }
+    .tab.active{
+      background:rgba(112,167,255,.12);
+      border-color:rgba(112,167,255,.25);
+    }
+    .hint{
+      color:var(--muted);
+      font-size:12px;
+      margin-top:10px;
+    }
+    /* Modal */
+    .modal-backdrop{
+      position:fixed; inset:0;
+      background:rgba(0,0,0,.55);
+      display:none;
+      align-items:center; justify-content:center;
+      padding:18px;
+    }
+    .modal{
+      width:min(860px, 100%);
+      border-radius:18px;
+      border:1px solid var(--line);
+      background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+      box-shadow:0 20px 60px rgba(0,0,0,.55);
+      overflow:hidden;
+    }
+    .modal .mhd{
+      padding:14px 16px;
+      border-bottom:1px solid var(--line);
+      display:flex; align-items:center; justify-content:space-between; gap:12px;
+    }
+    .modal .mhd b{font-size:14px}
+    .modal .mbd{
+      padding:14px 16px;
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:12px;
+    }
+    @media (max-width: 900px){ .modal .mbd{grid-template-columns:1fr} }
+    .card{
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.02);
+      border-radius:14px;
+      padding:12px 12px;
+    }
+    .card h3{margin:0; font-size:13px}
+    .card p{margin:8px 0 0; color:var(--muted); font-size:12px; line-height:1.45}
+    .card .rowbtns{display:flex; gap:10px; flex-wrap:wrap; margin-top:10px}
+    .close{
+      border:none; background:transparent; color:rgba(231,237,247,.8);
+      cursor:pointer; padding:6px 10px; border-radius:10px;
+      border:1px solid var(--line);
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <!-- Sidebar (maquette) -->
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="logo"></div>
+        <div>
+          <b>jemanage</b>
+          <small>Manager — cockpit équipe</small>
+        </div>
+      </div>
+
+      <nav class="nav">
+        <h4>Navigation</h4>
+        <a class="active" href="#" onclick="return false;">Équipe <span class="chip" id="navAlerts">—</span></a>
+        <a href="#" onclick="return false;">Entretiens</a>
+        <a href="#" onclick="return false;">Objectifs</a>
+        <a href="#" onclick="return false;">Paramètres</a>
+
+        <h4>Astuce UX</h4>
+        <a href="#" onclick="return false;">
+          Collaborateurs
+          <span class="chip">via liste & recherche</span>
+        </a>
+      </nav>
+
+      <div style="margin-top:14px; padding:12px; border:1px solid var(--line); border-radius:14px; background:rgba(255,255,255,.02)">
+        <b style="font-size:13px">Principe</b>
+        <p style="margin:8px 0 0; color:var(--muted); font-size:12px; line-height:1.4">
+          La page <b>Équipe</b> sert à <b>prioriser</b> et <b>agir</b>. Le détail vit dans la fiche collaborateur.
+        </p>
+      </div>
+    </aside>
+
+    <!-- Content -->
+    <main class="content">
+      <div class="topbar">
+        <div class="title">
+          <h1>Équipe</h1>
+          <p>Vision d’ensemble + priorités d’action. Clique sur une carte KPI pour filtrer, ou sur un collaborateur pour ouvrir la fiche (maquette modal).</p>
+        </div>
+
+        <div class="actions">
+          <button class="btn" id="btnExport"><span class="dot"></span> Export</button>
+          <button class="btn primary" id="btnPlan"><span class="dot"></span> Planifier un entretien</button>
+          <button class="btn danger" id="btnRelance"><span class="dot"></span> Relancer</button>
+        </div>
+      </div>
+
+      <!-- Tabs (onglets principaux de la page Équipe) -->
+      <div class="tabs" role="tablist" aria-label="Onglets Équipe">
+        <div class="tab active" data-tab="cockpit">Cockpit</div>
+        <div class="tab" data-tab="priorites">Priorités</div>
+        <div class="tab" data-tab="roles">Rôles</div>
+        <div class="tab" data-tab="competences">Compétences</div>
+        <div class="tab" data-tab="developpement">Développement</div>
+      </div>
+
+      <!-- Cockpit -->
+      <section id="tab-cockpit">
+        <div class="panel">
+          <div class="hd">
+            <div>
+              <b>Vue macro</b>
+              <div><small>Indicateurs utiles pour décider, pas pour “reporter”.</small></div>
+            </div>
+            <div style="display:flex; gap:8px; flex-wrap:wrap">
+              <span class="pill"><span class="s good"></span> OK</span>
+              <span class="pill"><span class="s warn"></span> Attention</span>
+              <span class="pill"><span class="s bad"></span> À traiter</span>
+              <span class="pill"><span class="s info"></span> Info</span>
+            </div>
+          </div>
+          <div class="bd">
+            <div class="kpis">
+              <div class="kpi" data-kpi="all">
+                <div class="label">Effectif</div>
+                <div class="value" id="kpiHeadcount">—</div>
+                <div class="meta">Collaborateurs dans ton périmètre</div>
+              </div>
+              <div class="kpi" data-kpi="attention">
+                <div class="label">Entretiens à faire / en retard</div>
+                <div class="value" id="kpiInterviews">—</div>
+                <div class="meta">À traiter cette semaine</div>
+              </div>
+              <div class="kpi" data-kpi="noObjectives">
+                <div class="label">Objectifs manquants</div>
+                <div class="value" id="kpiObjectivesMissing">—</div>
+                <div class="meta">Collaborateurs sans objectifs</div>
+              </div>
+              <div class="kpi" data-kpi="unclearRole">
+                <div class="label">Rôle non clair / vacant</div>
+                <div class="value" id="kpiRolesIssue">—</div>
+                <div class="meta">Rôle à clarifier ou besoin de renfort</div>
+              </div>
+            </div>
+
+            <div class="hint">
+              Astuce : les KPI servent de <b>raccourcis de filtre</b>. Le manager ne “navigue” pas, il <b>agit</b>.
+            </div>
+          </div>
+        </div>
+
+        <div class="grid" style="margin-top:14px">
+          <!-- Priorités -->
+          <div class="panel">
+            <div class="hd">
+              <div>
+                <b>À traiter en priorité</b>
+                <div><small>Liste dynamique (to-do managériale)</small></div>
+              </div>
+              <span class="chip" id="prioCount">—</span>
+            </div>
+            <div class="bd">
+              <div class="todo" id="prioList"></div>
+            </div>
+          </div>
+
+          <!-- Mini-synthèse Rôles/Compétences -->
+          <div class="panel">
+            <div class="hd">
+              <div>
+                <b>Couverture des rôles & compétences</b>
+                <div><small>Signaux faibles, sans administration lourde</small></div>
+              </div>
+              <span class="chip">Résumé</span>
+            </div>
+            <div class="bd" id="coverage">
+              <!-- rempli par JS -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Liste équipe -->
+        <div class="panel" style="margin-top:14px">
+          <div class="hd">
+            <div>
+              <b>Liste équipe</b>
+              <div><small>Tableau de pilotage (clic = fiche collaborateur)</small></div>
+            </div>
+            <span class="chip" id="listCount">—</span>
+          </div>
+
+          <div class="bd" style="padding-bottom:0">
+            <div id="tableWrap"></div>
+          </div>
+
+          <div class="filters">
+            <div class="left">
+              <div class="input">
+                <span style="opacity:.7">⌕</span>
+                <input id="q" type="text" placeholder="Rechercher un collaborateur, un rôle…" />
+              </div>
+
+              <select id="statusFilter" title="Statut">
+                <option value="all">Tous statuts</option>
+                <option value="ok">OK</option>
+                <option value="attention">Attention</option>
+                <option value="treat">À traiter</option>
+              </select>
+
+              <select id="roleFilter" title="Rôle">
+                <option value="all">Tous rôles</option>
+              </select>
+            </div>
+
+            <div class="right">
+              <button class="btn" id="clearFilters">Réinitialiser</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Priorités (tab) -->
+      <section id="tab-priorites" style="display:none">
+        <div class="panel">
+          <div class="hd">
+            <div>
+              <b>Priorités</b>
+              <div><small>Une vue 100% action, orientée manager</small></div>
+            </div>
+            <span class="chip" id="prioCount2">—</span>
+          </div>
+          <div class="bd">
+            <div class="todo" id="prioList2"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Rôles (tab) -->
+      <section id="tab-roles" style="display:none">
+        <div class="panel">
+          <div class="hd">
+            <div>
+              <b>Rôles</b>
+              <div><small>Vue équipe : couverts, vacants, à clarifier</small></div>
+            </div>
+            <span class="chip" id="rolesCount">—</span>
+          </div>
+          <div class="bd" id="rolesGrid"></div>
+        </div>
+      </section>
+
+      <!-- Compétences (tab) -->
+      <section id="tab-competences" style="display:none">
+        <div class="panel">
+          <div class="hd">
+            <div>
+              <b>Compétences</b>
+              <div><small>Carte des expertises utiles + manques</small></div>
+            </div>
+            <span class="chip" id="skillsCount">—</span>
+          </div>
+          <div class="bd" id="skillsGrid"></div>
+        </div>
+      </section>
+
+      <!-- Développement (tab) -->
+      <section id="tab-developpement" style="display:none">
+        <div class="panel">
+          <div class="hd">
+            <div>
+              <b>Développement</b>
+              <div><small>Formations + actions ouvertes (sans catalogue RH exhaustif)</small></div>
+            </div>
+            <span class="chip" id="devCount">—</span>
+          </div>
+          <div class="bd" id="devGrid"></div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Modal Collaborateur -->
+  <div class="modal-backdrop" id="backdrop" role="dialog" aria-modal="true">
+    <div class="modal">
+      <div class="mhd">
+        <b id="mTitle">Collaborateur</b>
+        <button class="close" id="mClose">Fermer</button>
+      </div>
+      <div class="mbd" id="mBody"></div>
+    </div>
+  </div>
+
+  <script>
+    // ---------------------------
+    // Data mock (à remplacer API)
+    // ---------------------------
+    const team = [
+      {
+        id: 1,
+        name: "Camille Durand",
+        initials: "CD",
+        role: "Chef de projet",
+        lastInterview: "2025-11-10",
+        nextAction: {type:"interview", label:"Planifier entretien de suivi", severity:"treat"},
+        interviews: {due: true, late: true},
+        objectives: {has: true},
+        roleClarity: "ok",
+        skills: [{name:"Gestion de projet", level:3},{name:"Communication", level:2}],
+        trainings: {recommended: ["Animation de réunion"], doneYTD: 1},
+        actionsOpen: 2,
+        status: "treat"
+      },
+      {
+        id: 2,
+        name: "Nora Benali",
+        initials: "NB",
+        role: "Développeuse",
+        lastInterview: "2025-12-05",
+        nextAction: {type:"objectives", label:"Définir objectifs T1", severity:"attention"},
+        interviews: {due: false, late: false},
+        objectives: {has: false},
+        roleClarity: "ok",
+        skills: [{name:"Backend", level:3},{name:"Qualité", level:2}],
+        trainings: {recommended: ["Clean Code"], doneYTD: 0},
+        actionsOpen: 1,
+        status: "attention"
+      },
+      {
+        id: 3,
+        name: "Hugo Martin",
+        initials: "HM",
+        role: "Commercial",
+        lastInterview: "2025-10-02",
+        nextAction: {type:"action", label:"Suivre plan d’action", severity:"attention"},
+        interviews: {due: true, late: false},
+        objectives: {has: true},
+        roleClarity: "ok",
+        skills: [{name:"Négociation", level:2},{name:"Prospection", level:2}],
+        trainings: {recommended: ["Vente consultative"], doneYTD: 2},
+        actionsOpen: 3,
+        status: "attention"
+      },
+      {
+        id: 4,
+        name: "Lina Roche",
+        initials: "LR",
+        role: "Rôle à clarifier",
+        lastInterview: "2025-09-18",
+        nextAction: {type:"role", label:"Clarifier rôle & attentes", severity:"treat"},
+        interviews: {due: true, late: true},
+        objectives: {has: false},
+        roleClarity: "unclear",
+        skills: [{name:"Support client", level:2}],
+        trainings: {recommended: ["Priorisation"], doneYTD: 0},
+        actionsOpen: 4,
+        status: "treat"
+      },
+      {
+        id: 5,
+        name: "Yanis Lopez",
+        initials: "YL",
+        role: "Designer",
+        lastInterview: "2025-12-12",
+        nextAction: {type:"none", label:"RAS", severity:"ok"},
+        interviews: {due: false, late: false},
+        objectives: {has: true},
+        roleClarity: "ok",
+        skills: [{name:"UX", level:3},{name:"UI", level:3}],
+        trainings: {recommended: [], doneYTD: 1},
+        actionsOpen: 0,
+        status: "ok"
+      },
+      {
+        id: 6,
+        name: "Poste à pourvoir",
+        initials: "+",
+        role: "Développeur Front",
+        lastInterview: null,
+        nextAction: {type:"recruit", label:"Lancer recrutement", severity:"treat"},
+        interviews: {due: false, late: false},
+        objectives: {has: false},
+        roleClarity: "vacant",
+        skills: [{name:"Front-end", level:3}],
+        trainings: {recommended: [], doneYTD: 0},
+        actionsOpen: 0,
+        status: "treat",
+        isVacant: true
+      },
+    ];
+
+    // ---------------------------
+    // Helpers
+    // ---------------------------
+    const fmtDate = (d) => {
+      if(!d) return "—";
+      const [y,m,dd] = d.split("-");
+      return `${dd}/${m}/${y}`;
+    };
+    const uniq = (arr) => [...new Set(arr)];
+    const bySeverityOrder = (s) => ({treat:0, attention:1, ok:2, info:3}[s] ?? 9);
+
+    function statusPills(person){
+      const pills = [];
+      if(person.interviews.late) pills.push({t:"Entretien en retard", s:"bad"});
+      else if(person.interviews.due) pills.push({t:"Entretien à planifier", s:"warn"});
+
+      if(!person.objectives.has) pills.push({t:"Objectifs manquants", s:"warn"});
+      if(person.roleClarity === "unclear") pills.push({t:"Rôle non clair", s:"bad"});
+      if(person.roleClarity === "vacant") pills.push({t:"Rôle vacant", s:"bad"});
+      if(person.actionsOpen > 0) pills.push({t:`${person.actionsOpen} action(s) ouverte(s)`, s:"info"});
+      return pills.slice(0,4);
+    }
+
+    // ---------------------------
+    // KPIs & Coverage
+    // ---------------------------
+    function computeKPIs(){
+      const headcount = team.filter(p => !p.isVacant).length;
+      const interviews = team.filter(p => p.interviews.due || p.interviews.late).length;
+      const objMissing = team.filter(p => !p.objectives.has && !p.isVacant).length;
+      const roleIssue = team.filter(p => (p.roleClarity === "unclear" || p.roleClarity === "vacant")).length;
+      const alerts = team.filter(p => p.status === "treat").length;
+      return {headcount, interviews, objMissing, roleIssue, alerts};
+    }
+
+    function renderCoverage(){
+      const roleList = team.map(p => p.role).filter(Boolean);
+      const vacant = team.filter(p => p.roleClarity==="vacant").map(p => p.role);
+      const unclear = team.filter(p => p.roleClarity==="unclear").map(p => p.name);
+
+      const skills = team.flatMap(p => p.skills || []).map(s => s.name);
+      const topSkills = uniq(skills).slice(0,8);
+
+      const k = computeKPIs();
+      const el = document.getElementById("coverage");
+      el.innerHTML = `
+        <div class="card">
+          <h3>Rôles</h3>
+          <p><b>${uniq(roleList).length}</b> rôles visibles / <b>${vacant.length}</b> vacant(s) / <b>${unclear.length}</b> à clarifier</p>
+          <div class="rowbtns">
+            <button class="btn" onclick="activateTab('roles')">Voir les rôles</button>
+            <button class="btn primary" onclick="applyQuickFilter('unclearRole')">Filtrer problèmes rôles</button>
+          </div>
+        </div>
+        <div class="card" style="margin-top:12px">
+          <h3>Compétences</h3>
+          <p>Top expertises : ${topSkills.map(s => `<span class="chip" style="margin-right:6px">${s}</span>`).join("")}</p>
+          <div class="rowbtns">
+            <button class="btn" onclick="activateTab('competences')">Voir compétences</button>
+          </div>
+        </div>
+        <div class="card" style="margin-top:12px">
+          <h3>À ne pas confondre</h3>
+          <p>Administration référentiels / catalogue = espace RH/Admin. Ici : <b>pilotage manager</b>.</p>
+        </div>
+      `;
+    }
+
+    // ---------------------------
+    // Priorities
+    // ---------------------------
+    function buildPriorities(){
+      const prios = [];
+
+      const late = team.filter(p => p.interviews.late);
+      if(late.length) prios.push({
+        key:"lateInterviews",
+        title:`Entretiens en retard (${late.length})`,
+        desc:"Planifier ou clôturer. C’est un risque de pilotage et de crédibilité.",
+        cta:"Ouvrir la liste",
+        filter: () => { applyFilterSet({kpi:"attention"}); }
+      });
+
+      const objMissing = team.filter(p => !p.objectives.has && !p.isVacant);
+      if(objMissing.length) prios.push({
+        key:"objMissing",
+        title:`Objectifs manquants (${objMissing.length})`,
+        desc:"Sans objectifs, pas d’alignement ni de suivi.",
+        cta:"Définir objectifs",
+        filter: () => { applyQuickFilter("noObjectives"); }
+      });
+
+      const roleIssue = team.filter(p => p.roleClarity==="unclear" || p.roleClarity==="vacant");
+      if(roleIssue.length) prios.push({
+        key:"roleIssue",
+        title:`Rôle non clair / vacant (${roleIssue.length})`,
+        desc:"Clarifier attentes ou déclencher un besoin de renfort.",
+        cta:"Traiter rôles",
+        filter: () => { applyQuickFilter("unclearRole"); }
+      });
+
+      const trainingNeed = team.filter(p => (p.trainings.recommended || []).length > 0 && p.trainings.doneYTD === 0 && !p.isVacant);
+      if(trainingNeed.length) prios.push({
+        key:"trainingNeed",
+        title:`Développement à lancer (${trainingNeed.length})`,
+        desc:"Recommandations de formation non engagées.",
+        cta:"Voir développement",
+        filter: () => { activateTab("developpement"); }
+      });
+
+      // Tri : treat puis attention
+      return prios;
+    }
+
+    function renderPriorities(targetId){
+      const prios = buildPriorities();
+      const wrap = document.getElementById(targetId);
+      wrap.innerHTML = prios.map(p => `
+        <div class="item" data-prio="${p.key}">
+          <div>
+            <b>${p.title}</b>
+            <p>${p.desc}</p>
+          </div>
+          <div class="cta">${p.cta} →</div>
+        </div>
+      `).join("");
+
+      wrap.querySelectorAll(".item").forEach(item=>{
+        const key = item.getAttribute("data-prio");
+        item.addEventListener("click", ()=>{
+          const prio = prios.find(x => x.key===key);
+          if(prio && prio.filter) prio.filter();
+        });
+      });
+
+      document.getElementById("prioCount").textContent = `${prios.length} priorité(s)`;
+      document.getElementById("prioCount2").textContent = `${prios.length} priorité(s)`;
+    }
+
+    // ---------------------------
+    // Table
+    // ---------------------------
+    let state = {
+      q:"",
+      status:"all",
+      role:"all",
+      kpi:"all" // quick filter
+    };
+
+    function matches(p){
+      const q = state.q.trim().toLowerCase();
+      if(q){
+        const blob = `${p.name} ${p.role}`.toLowerCase();
+        if(!blob.includes(q)) return false;
+      }
+      if(state.status !== "all"){
+        if(state.status === "ok" && p.status !== "ok") return false;
+        if(state.status === "attention" && p.status !== "attention") return false;
+        if(state.status === "treat" && p.status !== "treat") return false;
+      }
+      if(state.role !== "all"){
+        if(p.role !== state.role) return false;
+      }
+
+      // quick kpi filters
+      if(state.kpi === "noObjectives"){
+        if(p.objectives.has || p.isVacant) return false;
+      }
+      if(state.kpi === "unclearRole"){
+        if(!(p.roleClarity==="unclear" || p.roleClarity==="vacant")) return false;
+      }
+      if(state.kpi === "attention"){
+        if(!(p.interviews.due || p.interviews.late)) return false;
+      }
+      return true;
+    }
+
+    function renderTable(){
+      const rows = team.filter(matches).sort((a,b)=>{
+        return bySeverityOrder(a.nextAction.severity) - bySeverityOrder(b.nextAction.severity);
+      });
+
+      document.getElementById("listCount").textContent = `${rows.length} affiché(s)`;
+      const wrap = document.getElementById("tableWrap");
+
+      const header = `
+        <div style="display:grid; grid-template-columns: 1.4fr 1fr .9fr 1.2fr .7fr; gap:10px; padding:0 12px 8px; color:rgba(231,237,247,.65); font-size:12px">
+          <div>Collaborateur</div>
+          <div>Rôle</div>
+          <div>Dernier entretien</div>
+          <div class="hide-sm">Prochaine action</div>
+          <div style="text-align:right">Statut</div>
+        </div>
+      `;
+
+      const list = rows.map(p=>{
+        const pills = statusPills(p);
+        const sev = p.nextAction.severity;
+        const sevDot = (sev==="treat"?"bad":sev==="attention"?"warn":sev==="ok"?"good":"info");
+        return `
+          <div class="tr" data-id="${p.id}">
+            <div class="cell">
+              <div class="name">
+                <span class="avatar">${p.initials}</span>
+                <div>
+                  <b>${p.name}</b>
+                  <small>${p.isVacant ? "Besoin de recrutement" : "Équipe"}</small>
+                </div>
+              </div>
+            </div>
+            <div class="cell">
+              <b>${p.role || "—"}</b>
+              <small>${p.roleClarity==="vacant" ? "Vacant" : (p.roleClarity==="unclear" ? "À clarifier" : "OK")}</small>
+            </div>
+            <div class="cell">
+              <b>${fmtDate(p.lastInterview)}</b>
+              <small>${p.interviews.late ? "En retard" : (p.interviews.due ? "À planifier" : "OK")}</small>
+            </div>
+            <div class="cell hide-sm">
+              <b>${p.nextAction.label}</b>
+              <small>${p.nextAction.type}</small>
+            </div>
+            <div class="cell" style="text-align:right">
+              <div class="status">
+                ${pills.length ? pills.map(x=>`
+                  <span class="pill"><span class="s ${x.s}"></span>${x.t}</span>
+                `).join("") : `<span class="pill"><span class="s good"></span>OK</span>`}
+                <span class="pill"><span class="s ${sevDot}"></span>${sev==="treat"?"À traiter":sev==="attention"?"Attention":"OK"}</span>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join("");
+
+      wrap.innerHTML = header + list;
+
+      wrap.querySelectorAll(".tr").forEach(el=>{
+        el.addEventListener("click", ()=>{
+          const id = Number(el.getAttribute("data-id"));
+          openModal(id);
+        });
+      });
+    }
+
+    function fillRoleFilter(){
+      const roles = uniq(team.map(p => p.role).filter(Boolean)).sort();
+      const sel = document.getElementById("roleFilter");
+      roles.forEach(r=>{
+        const opt = document.createElement("option");
+        opt.value = r;
+        opt.textContent = r;
+        sel.appendChild(opt);
+      });
+    }
+
+    // ---------------------------
+    // Tabs
+    // ---------------------------
+    function activateTab(tab){
+      document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("active", t.getAttribute("data-tab")===tab));
+      const ids = ["cockpit","priorites","roles","competences","developpement"];
+      ids.forEach(id=>{
+        document.getElementById(`tab-${id}`).style.display = (id===tab) ? "block" : "none";
+      });
+
+      // Render tab-specific views
+      if(tab === "priorites"){
+        renderPriorities("prioList2");
+      }
+      if(tab === "roles"){
+        renderRolesTab();
+      }
+      if(tab === "competences"){
+        renderSkillsTab();
+      }
+      if(tab === "developpement"){
+        renderDevTab();
+      }
+    }
+
+    document.querySelectorAll(".tab").forEach(t=>{
+      t.addEventListener("click", ()=> activateTab(t.getAttribute("data-tab")));
+    });
+
+    // ---------------------------
+    // Quick filters (KPI cards)
+    // ---------------------------
+    function applyQuickFilter(kpiKey){
+      state.kpi = kpiKey;
+      // align UI for clarity
+      document.getElementById("statusFilter").value = "all";
+      document.getElementById("roleFilter").value = "all";
+      state.status = "all";
+      state.role = "all";
+      renderTable();
+      // keep in cockpit tab
+      activateTab("cockpit");
+    }
+
+    function applyFilterSet({kpi}){
+      state.kpi = kpi || "all";
+      renderTable();
+      activateTab("cockpit");
+    }
+
+    document.querySelectorAll(".kpi").forEach(k=>{
+      k.addEventListener("click", ()=>{
+        const key = k.getAttribute("data-kpi");
+        state.kpi = key;
+        renderTable();
+      });
+    });
+
+    // ---------------------------
+    // Roles / Skills / Dev tabs
+    // ---------------------------
+    function renderRolesTab(){
+      const roles = team.map(p => ({
+        role: p.role,
+        who: p.isVacant ? "Vacant" : p.name,
+        status: p.roleClarity==="vacant" ? "bad" : (p.roleClarity==="unclear" ? "warn" : "good")
+      }));
+      document.getElementById("rolesCount").textContent = `${roles.length} entrée(s)`;
+
+      const groups = {};
+      roles.forEach(r=>{
+        groups[r.role] ||= [];
+        groups[r.role].push(r);
+      });
+
+      const grid = Object.entries(groups).map(([role, items])=>{
+        const vac = items.filter(x=>x.who==="Vacant").length;
+        const unclear = team.filter(p => p.role===role && p.roleClarity==="unclear").length;
+        return `
+          <div class="card" style="margin-bottom:12px">
+            <h3>${role}</h3>
+            <p>
+              ${vac ? `<span class="pill"><span class="s bad"></span>${vac} vacant</span>` : `<span class="pill"><span class="s good"></span>couvert</span>`}
+              ${unclear ? `<span class="pill" style="margin-left:8px"><span class="s warn"></span>${unclear} à clarifier</span>` : ""}
+            </p>
+            <div class="rowbtns">
+              <button class="btn" onclick="state.role='${escapeHtml(role)}'; document.getElementById('roleFilter').value='${escapeHtml(role)}'; renderTable(); activateTab('cockpit');">Voir dans la liste</button>
+              <button class="btn primary" onclick="openRoleModal('${escapeHtml(role)}')">Détails</button>
+            </div>
+          </div>
+        `;
+      }).join("");
+
+      document.getElementById("rolesGrid").innerHTML = grid || `<div class="card"><p>Aucun rôle.</p></div>`;
+    }
+
+    function renderSkillsTab(){
+      const allSkills = team.flatMap(p => (p.skills||[]).map(s => ({person:p, skill:s.name, level:s.level})));
+      const skillNames = uniq(allSkills.map(x=>x.skill)).sort();
+      document.getElementById("skillsCount").textContent = `${skillNames.length} expertise(s)`;
+
+      const cards = skillNames.map(name=>{
+        const entries = allSkills.filter(x=>x.skill===name);
+        const levels = entries.map(e=>e.level);
+        const avg = (levels.reduce((a,b)=>a+b,0)/levels.length).toFixed(1);
+        const max = Math.max(...levels);
+        const refs = entries.filter(e=>e.level===max).map(e=>e.person.name).slice(0,3);
+        return `
+          <div class="card" style="margin-bottom:12px">
+            <h3>${name}</h3>
+            <p>
+              <span class="pill"><span class="s info"></span>${entries.length} personne(s)</span>
+              <span class="pill" style="margin-left:8px"><span class="s good"></span>Niveau moyen ${avg}</span>
+            </p>
+            <p>Référents possibles : <b>${refs.join(", ") || "—"}</b></p>
+            <div class="rowbtns">
+              <button class="btn" onclick="filterBySkill('${escapeHtml(name)}')">Voir personnes</button>
+              <button class="btn primary" onclick="openSkillModal('${escapeHtml(name)}')">Détails</button>
+            </div>
+          </div>
+        `;
+      }).join("");
+
+      document.getElementById("skillsGrid").innerHTML = cards || `<div class="card"><p>Aucune expertise.</p></div>`;
+    }
+
+    function renderDevTab(){
+      const people = team.filter(p => !p.isVacant);
+      const ytd = people.reduce((sum,p)=>sum + (p.trainings.doneYTD||0), 0);
+      const rec = people.filter(p => (p.trainings.recommended||[]).length>0).length;
+      const open = people.reduce((sum,p)=>sum + (p.actionsOpen||0), 0);
+
+      document.getElementById("devCount").textContent = `YTD: ${ytd} / Recos: ${rec} / Actions: ${open}`;
+
+      const cards = `
+        <div class="card" style="margin-bottom:12px">
+          <h3>Indicateurs développement</h3>
+          <p>
+            <span class="pill"><span class="s info"></span>${ytd} formation(s) réalisée(s) YTD</span>
+            <span class="pill" style="margin-left:8px"><span class="s warn"></span>${rec} personne(s) avec reco</span>
+            <span class="pill" style="margin-left:8px"><span class="s info"></span>${open} action(s) ouverte(s)</span>
+          </p>
+          <p>Cette page reste <b>manager-centric</b> : pas de catalogue exhaustif ici.</p>
+        </div>
+
+        ${people.map(p=>`
+          <div class="card" style="margin-bottom:12px">
+            <h3>${p.name}</h3>
+            <p>
+              <span class="pill"><span class="s info"></span>${p.actionsOpen} action(s) ouverte(s)</span>
+              <span class="pill" style="margin-left:8px"><span class="s ${p.trainings.doneYTD>0?'good':'warn'}"></span>${p.trainings.doneYTD} formation(s) YTD</span>
+            </p>
+            <p>Recommandations : <b>${(p.trainings.recommended||[]).join(", ") || "—"}</b></p>
+            <div class="rowbtns">
+              <button class="btn" onclick="openModal(${p.id})">Ouvrir fiche</button>
+              <button class="btn primary" onclick="alert('Maquette : déclencher un workflow “demande formation”')">Proposer formation</button>
+            </div>
+          </div>
+        `).join("")}
+      `;
+      document.getElementById("devGrid").innerHTML = cards;
+    }
+
+    // ---------------------------
+    // Modal (fiche collaborateur)
+    // ---------------------------
+    function openModal(id){
+      const p = team.find(x=>x.id===id);
+      if(!p) return;
+
+      document.getElementById("mTitle").textContent = `${p.name} — ${p.role}`;
+      const pills = statusPills(p);
+
+      document.getElementById("mBody").innerHTML = `
+        <div class="card">
+          <h3>Statut & priorités</h3>
+          <p>
+            ${(pills.length ? pills.map(x=>`<span class="pill" style="margin-right:6px"><span class="s ${x.s}"></span>${x.t}</span>`).join("") : `<span class="pill"><span class="s good"></span>OK</span>`)}
+          </p>
+          <p>Prochaine action : <b>${p.nextAction.label}</b></p>
+          <div class="rowbtns">
+            <button class="btn primary" onclick="alert('Maquette : ouvrir workflow action')">Lancer l’action</button>
+            <button class="btn" onclick="alert('Maquette : ouvrir historique entretiens')">Voir entretiens</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Résumé</h3>
+          <p>Dernier entretien : <b>${fmtDate(p.lastInterview)}</b></p>
+          <p>Objectifs : <b>${p.objectives.has ? "définis" : "manquants"}</b></p>
+          <p>Actions ouvertes : <b>${p.actionsOpen}</b></p>
+          <div class="rowbtns">
+            <button class="btn" onclick="alert('Maquette : ouvrir objectifs')">Objectifs</button>
+            <button class="btn" onclick="alert('Maquette : ouvrir plan d’action')">Plan d’action</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Compétences</h3>
+          <p>${(p.skills||[]).map(s=>`<span class="pill" style="margin-right:6px"><span class="s info"></span>${s.name} (niv. ${s.level})</span>`).join("") || "—"}</p>
+          <div class="rowbtns">
+            <button class="btn" onclick="activateTab('competences'); closeModal();">Voir carte compétences</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Développement</h3>
+          <p>Formations recommandées : <b>${(p.trainings.recommended||[]).join(", ") || "—"}</b></p>
+          <p>Formations réalisées YTD : <b>${p.trainings.doneYTD}</b></p>
+          <div class="rowbtns">
+            <button class="btn" onclick="activateTab('developpement'); closeModal();">Ouvrir Développement</button>
+          </div>
+        </div>
+      `;
+
+      document.getElementById("backdrop").style.display = "flex";
+    }
+
+    function closeModal(){
+      document.getElementById("backdrop").style.display = "none";
+    }
+    document.getElementById("mClose").addEventListener("click", closeModal);
+    document.getElementById("backdrop").addEventListener("click", (e)=>{
+      if(e.target.id === "backdrop") closeModal();
+    });
+
+    function openRoleModal(role){
+      const people = team.filter(p=>p.role===role && !p.isVacant).map(p=>p.name);
+      const vacant = team.filter(p=>p.role===role && p.isVacant).length;
+      document.getElementById("mTitle").textContent = `Rôle — ${role}`;
+      document.getElementById("mBody").innerHTML = `
+        <div class="card">
+          <h3>Couverture</h3>
+          <p>${vacant ? `<span class="pill"><span class="s bad"></span>${vacant} poste(s) vacant(s)</span>` : `<span class="pill"><span class="s good"></span>Couvert</span>`}</p>
+          <p>Personnes : <b>${people.join(", ") || "—"}</b></p>
+          <div class="rowbtns">
+            <button class="btn primary" onclick="alert('Maquette : créer un “rôle en demande” (besoin recrutement)')">Créer besoin</button>
+            <button class="btn" onclick="closeModal()">Fermer</button>
+          </div>
+        </div>
+        <div class="card">
+          <h3>Actions manager</h3>
+          <p>Clarifier le rôle, ajuster les attentes, ou escalader au RH/Admin si changement de référentiel.</p>
+        </div>
+      `;
+      document.getElementById("backdrop").style.display = "flex";
+    }
+
+    function openSkillModal(skill){
+      const entries = team.flatMap(p => (p.skills||[]).filter(s=>s.name===skill).map(s=>({name:p.name, level:s.level})));
+      entries.sort((a,b)=>b.level-a.level);
+      document.getElementById("mTitle").textContent = `Compétence — ${skill}`;
+      document.getElementById("mBody").innerHTML = `
+        <div class="card">
+          <h3>Répartition</h3>
+          <p>${entries.map(e=>`<span class="pill" style="margin-right:6px"><span class="s info"></span>${e.name} (niv. ${e.level})</span>`).join("") || "—"}</p>
+          <div class="rowbtns">
+            <button class="btn" onclick="filterBySkill('${escapeHtml(skill)}'); closeModal();">Filtrer personnes</button>
+            <button class="btn primary" onclick="alert('Maquette : suggérer montée en compétence / formation')">Suggérer dev</button>
+          </div>
+        </div>
+        <div class="card">
+          <h3>Garde-fou</h3>
+          <p>La modification du référentiel global n’est pas sur cette page. Ici : lecture + signalement.</p>
+        </div>
+      `;
+      document.getElementById("backdrop").style.display = "flex";
+    }
+
+    function filterBySkill(skill){
+      // simple: filter search by skill keyword in role/name mock
+      document.getElementById("q").value = skill;
+      state.q = skill;
+      renderTable();
+      activateTab("cockpit");
+    }
+
+    // ---------------------------
+    // Filters UI
+    // ---------------------------
+    document.getElementById("q").addEventListener("input", (e)=>{
+      state.q = e.target.value;
+      renderTable();
+    });
+
+    document.getElementById("statusFilter").addEventListener("change", (e)=>{
+      state.status = e.target.value;
+      state.kpi = "all";
+      renderTable();
+    });
+
+    document.getElementById("roleFilter").addEventListener("change", (e)=>{
+      state.role = e.target.value;
+      state.kpi = "all";
+      renderTable();
+    });
+
+    document.getElementById("clearFilters").addEventListener("click", ()=>{
+      state = {q:"", status:"all", role:"all", kpi:"all"};
+      document.getElementById("q").value = "";
+      document.getElementById("statusFilter").value = "all";
+      document.getElementById("roleFilter").value = "all";
+      renderTable();
+    });
+
+    // ---------------------------
+    // Buttons (maquette)
+    // ---------------------------
+    document.getElementById("btnExport").addEventListener("click", ()=> alert("Maquette : export CSV / Excel"));
+    document.getElementById("btnPlan").addEventListener("click", ()=> alert("Maquette : planifier un entretien (flow)"));
+    document.getElementById("btnRelance").addEventListener("click", ()=> alert("Maquette : relance multi-collaborateurs"));
+
+    // ---------------------------
+    // Init
+    // ---------------------------
+    function escapeHtml(str){
+      return String(str).replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;");
+    }
+
+    function init(){
+      const k = computeKPIs();
+      document.getElementById("kpiHeadcount").textContent = k.headcount;
+      document.getElementById("kpiInterviews").textContent = k.interviews;
+      document.getElementById("kpiObjectivesMissing").textContent = k.objMissing;
+      document.getElementById("kpiRolesIssue").textContent = k.roleIssue;
+      document.getElementById("navAlerts").textContent = `${k.alerts} à traiter`;
+
+      fillRoleFilter();
+      renderPriorities("prioList");
+      renderCoverage();
+      renderTable();
+
+      // default render other tabs if opened
+      // (lazy render on activation)
+    }
+
+    init();
+  </script>
+</body>
+</html>
